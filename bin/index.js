@@ -52,16 +52,14 @@ function generateFromTemplate(templateBasename, data) {
 
 function generateHeaders(headers, level) {
     let content = "";
-    console.log(headers);
-    if (headers) {
     headers.forEach(header => {
         content += generateFromTemplate("header-template", {
             "headmark": "#".repeat(level),
             "title": header.title,
+            "brief": header.brief,
             "content": (header.headers) ? generateHeaders(header.headers, level + 1) : ""
         })
     })
-}
     return content;
 }
 
@@ -72,7 +70,7 @@ function generateDocuments(topics) {
         data.slug = getTopicBasename(topic);
         data.title = topic.title;
         data.brief = topic.brief;
-        console.log(topic);
+
         data.content = (topic.headers) ? generateHeaders(topic.headers, 2) : "undefined"
 
         let result = generateFromTemplate("topic-template", data);
