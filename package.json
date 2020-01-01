@@ -1,0 +1,29 @@
+{
+  "name": "yaml-to-docusaurus",
+  "version": "1.0.0",
+  "description": "NodeJS app to create Markdown documents and sidebar for Docusaurus from .yaml outline file",
+  "main": "./bin/index.js",
+  "bin": {
+    "yaml-to-docusaurus": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ioncakephper/yaml-to-docusaurus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ioncakephper/yaml-to-docusaurus/issues"
+  },
+  "homepage": "https://github.com/ioncakephper/yaml-to-docusaurus#readme",
+  "devDependencies": {
+    "commander": "^4.0.1",
+    "fs": "0.0.1-security",
+    "handlebars": "^4.5.3",
+    "path": "^0.12.7",
+    "yamljs": "^0.3.0"
+  }
+}

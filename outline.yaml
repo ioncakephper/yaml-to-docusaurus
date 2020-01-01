@@ -1,0 +1,24 @@
+project: Sample documentation outline
+topics:
+  - title: Getting started
+    folder: true
+    short: Overview
+    brief: At accusam invidunt accusam dolor lorem diam. At et et sed lorem. Rebum dolor tempor stet aliquyam. Lorem gubergren takimata.
+
+    headers:
+      - title: Gubergren duo et
+      - title: Et labore eirmod sit
+        headers:
+          - title: Tempor et dolor ea
+          - title: Magna sed gubergren
+          - title: Tt nonumy voluptua sed sanctus
+      - title: Rebum et labore erat duo
+
+    topics:
+      - title: Lorem eirmod vero no
+        headers:
+          -title: Dolor sadipscing vero
+
+      - title: Lorem eirmod veromoso no
+        headers:
+          -title: Dolor ducere sadipscing vero
