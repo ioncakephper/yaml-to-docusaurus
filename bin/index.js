@@ -15,6 +15,8 @@ program
 var options = {};
 var config = {
     "markdownExtension": ".md",
+    "templateExtension": ".handlebars",
+    "templates": "./templates",
     "extension": ".yaml"
 }
 program.parse(process.argv);
@@ -40,11 +42,40 @@ function execute(outlineFilename) {
     generateDocuments(topics);
 }
 
+function generateFromTemplate(templateBasename, data) {
+    let tfn = setMissingExtension(templateBasename, config.templateExtension);
+    tfn = [config.templates, tfn].join("\\");
+    let template = Handlebars.compile(fs.readFileSync(tfn, "utf8"));
+    return template(data);
+
+}
+
+function generateHeaders(headers, level) {
+    let content = "";
+    console.log(headers);
+    if (headers) {
+    headers.forEach(header => {
+        content += generateFromTemplate("header-template", {
+            "headmark": "#".repeat(level),
+            "title": header.title,
+            "content": (header.headers) ? generateHeaders(header.headers, level + 1) : ""
+        })
+    })
+}
+    return content;
+}
 
 function generateDocuments(topics) {
     topics.forEach(topic => {
 
-        let result = "Here is example";
+        let data = {};
+        data.slug = getTopicBasename(topic);
+        data.title = topic.title;
+        data.brief = topic.brief;
+        console.log(topic);
+        data.content = (topic.headers) ? generateHeaders(topic.headers, 2) : "undefined"
+
+        let result = generateFromTemplate("topic-template", data);
         writeDocument(topic, result);
 
         if (topic.topics) {
