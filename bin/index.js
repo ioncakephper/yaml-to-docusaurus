@@ -8,6 +8,7 @@ const program = require("commander");
 
 
 program
+    .version("1.0.0")
     .option("-o, --output <path>", "Docusaurus output documents path", "./docs")
     .option("-w, --website <path>", "Docusaurus website folder", "./website")
     ;
@@ -20,14 +21,14 @@ var config = {
     "extension": ".yaml"
 }
 program.parse(process.argv);
-if (program.args.length > 0) {
-    loadConfiguration();
-    let fn = setMissingExtension(program.args[0], config.extension);
-    options = applyDefaultOptions(program.opts());
 
- 
-        execute(fn);
-}
+let fn = (program.args.length > 0) ? program.args[0] : "yaml-to-docusaurus";
+loadConfiguration();
+fn = setMissingExtension(fn, config.extension);
+options = applyDefaultOptions(program.opts());
+
+execute(fn);
+
 
 function execute(outlineFilename) {
 
@@ -38,7 +39,6 @@ function execute(outlineFilename) {
     if (!fs.existsSync(options.output)) {
         fs.mkdirSync(options.output);
     }
-
     generateDocuments(topics);
 }
 
