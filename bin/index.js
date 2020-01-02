@@ -116,7 +116,7 @@ function generateDocuments(topics) {
 
         let data = {};
         data.slug = getTopicBasename(topic);
-        data.title = topic.title;
+        data.title = (topic.short) ? topic.short : topic.title;
         data.brief = topic.brief;
 
         data.content = (topic.headers) ? generateHeaders(topic.headers, 2) : "";
