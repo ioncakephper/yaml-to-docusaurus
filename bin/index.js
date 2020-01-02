@@ -54,22 +54,28 @@ function generateSidebarFolders(topics) {
     topics.forEach(topic => {
         if (topic.folder) {
 
-            folders.push(folder);
+            folder.last = folder.slugs.pop();
+            if (folder.title.length > 0) {
+                folders.push(folder); 
+            }        
             let folderTitle = (topic.short) ? topic.short : topic.title;
             folder = {"title": folderTitle, "slugs": [], "last": "", "done": false, "folders": []};
-
         }
-        folder.slugs.push(getTopicBasename(topic));
-        folder.last = folder.slugs.pop();
 
+        folder.slugs.push(getTopicBasename(topic));
+        
         if (topic.topics) {
-            folder.folders = generateSidebarFolders(topic.topics);
+            topic.topics.forEach(childTopic => {
+                folder.slugs.push(getTopicBasename(childTopic));
+            });
         }
     })
     if (!folder.done) {
+        folder.last = folder.slugs.pop();
         folder.done = true;
         folders.push(folder);
     }
+
     return folders;
 }
 
