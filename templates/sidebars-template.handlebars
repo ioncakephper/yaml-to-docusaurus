@@ -1,0 +1,18 @@
+{
+    "docs": {
+        {{#each folders}}
+        "{{title}}": [
+            {{#each slugs}}
+            "{{this}}",
+            {{/each}}
+            "{{last}}"
+        ],
+        {{/each}}
+        "{{last.title}}": [
+            {{#each last.slugs}}
+            "{{this}}",
+            {{/each}}
+            "{{last.last}}"
+        ]
+    }
+}
