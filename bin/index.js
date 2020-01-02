@@ -58,7 +58,7 @@ function generateSidebarFolders(topics) {
             if (folder.title.length > 0) {
                 folders.push(folder); 
             }        
-            let folderTitle = (topic.short) ? topic.short : topic.title;
+            let folderTitle = topic.title;
             folder = {"title": folderTitle, "slugs": [], "last": "", "done": false, "folders": []};
         }
 
