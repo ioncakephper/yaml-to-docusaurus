@@ -8,6 +8,7 @@ const program = require("commander");
 
 
 program
+    .version("1.0.0")
     .option("-o, --output <path>", "Docusaurus output documents path", "./docs")
     .option("-w, --website <path>", "Docusaurus website folder", "./website")
     ;
@@ -20,26 +21,67 @@ var config = {
     "extension": ".yaml"
 }
 program.parse(process.argv);
-if (program.args.length > 0) {
-    loadConfiguration();
-    let fn = setMissingExtension(program.args[0], config.extension);
-    options = applyDefaultOptions(program.opts());
 
- 
-        execute(fn);
-}
+let fn = (program.args.length > 0) ? program.args[0] : "yaml-to-docusaurus";
+loadConfiguration();
+fn = setMissingExtension(fn, config.extension);
+options = applyDefaultOptions(program.opts());
+
+execute(fn);
+
 
 function execute(outlineFilename) {
 
     var doc = YAML.parse(fs.readFileSync(outlineFilename, "utf8"));
     var topics = doc.topics;
 
-
+    // Generate topic markdown files
     if (!fs.existsSync(options.output)) {
         fs.mkdirSync(options.output);
     }
-
     generateDocuments(topics);
+
+    // Generate sidebar.json in ./website folder
+    if (!fs.existsSync(options.website)) {
+        fs.mkdirSync(options.website)
+    }
+    generateSidebar(topics);
+}
+
+function generateSidebarFolders(topics) {
+    let folders = [];
+    let folder = {"title": "", "slugs": [], "last": "", "done": false, "folders": []};
+    topics.forEach(topic => {
+        if (topic.folder) {
+
+            folders.push(folder);
+            let folderTitle = (topic.short) ? topic.short : topic.title;
+            folder = {"title": folderTitle, "slugs": [], "last": "", "done": false, "folders": []};
+
+        }
+        folder.slugs.push(getTopicBasename(topic));
+        folder.last = folder.slugs.pop();
+
+        if (topic.topics) {
+            folder.folders = generateSidebarFolders(topic.topics);
+        }
+    })
+    if (!folder.done) {
+        folder.done = true;
+        folders.push(folder);
+    }
+    return folders;
+}
+
+function generateSidebar(topics) {
+
+    let data = {};
+    data.folders = generateSidebarFolders(topics);
+    data.last = data.folders.pop();
+
+    let result = generateFromTemplate("sidebars-template", data);
+    let sidebarFilename = [options.website, "sidebars.json"].join("\\");
+    fs.writeFileSync(sidebarFilename, result, "utf8");
 }
 
 function generateFromTemplate(templateBasename, data) {
@@ -93,6 +135,8 @@ function getTopicFilename(topic) {
 }
 
 function slug(source) {
+    // TODO: remove heading and trailing special characters
+    // TODO: replace sequence of special characters with a single dash
     return source.trim().toLowerCase().replace(/ +/g, "-");
 }
 
@@ -101,8 +145,6 @@ function writeDocument(topic, body) {
     filename = [options.output, filename].join("\\");
     fs.writeFileSync(filename, body, "utf8");
 }
-
-
 
 function applyDefaultOptions(opts) {
     return opts;
