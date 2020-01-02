@@ -119,7 +119,7 @@ function generateDocuments(topics) {
         data.title = topic.title;
         data.brief = topic.brief;
 
-        data.content = (topic.headers) ? generateHeaders(topic.headers, 2) : "undefined"
+        data.content = (topic.headers) ? generateHeaders(topic.headers, 2) : "";
 
         let result = generateFromTemplate("topic-template", data);
         writeDocument(topic, result);
